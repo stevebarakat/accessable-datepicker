@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import Datepicker from "./datepicker";
+import Calendar from "./calendar";
 import './App.css';
 
 const App = () => {
@@ -28,7 +29,7 @@ const App = () => {
         <Datepicker date={date} handleSelect={toggleCalendar}/>
       )}
       {showCalendar && (
-        <div>Calendar</div>
+        <Calendar date={date} handleSelectDate={handleSelectDate} closeCalendar={closeCalendar} />
       )}
     </div>
   );

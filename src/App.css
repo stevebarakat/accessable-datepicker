@@ -4,9 +4,11 @@
   justify-content: center;
   padding-top: 50px;
 }
+
 *:focus {
   outline: 2px solid #d71ef7;
 }
+
 .datepicker {
   display: flex;
   flex-direction: row;
@@ -20,4 +22,59 @@
   border-right: 1px solid black;
   background-color: #00b5ad;
   color: #000000;
+}
+
+.calendar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 16px;
+  background-color: #00b5ad;
+  padding: 10px 0;
+  border: 1px solid black;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+}
+
+.iconContainer {
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.month {
+  padding: 0 15px;
+}
+
+.header {
+  height: 30px;
+}
+
+.cell {
+  border: 1px solid black;
+  border-radius: 3px;
+  height: 30px;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.cell:hover {
+  background-color: #fc3;
+  border-color: #800;
+}
+
+.cell.active {
+  background-color: #fc3;
+  border-color: #800;
 }
