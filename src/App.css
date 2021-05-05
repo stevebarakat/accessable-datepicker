@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+*:focus {
+  outline: 2px solid #d71ef7;
+}
+.datepicker {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.datepicker > div {
+  padding: 10px 20px;
+}
+.datepicker > div:nth-child(1) {
+  border-right: 1px solid black;
+  background-color: #00b5ad;
+  color: #000000;
+}
