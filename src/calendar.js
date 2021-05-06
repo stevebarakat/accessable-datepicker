@@ -104,7 +104,10 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     const firstOfMonth = startOfMonth(selectedDate);
     // % 7 makes the dates 0-index, 0 == sun, 6 == sat
     const firstDayOfMonth = getDay(startOfMonth(selectedDate)) % 7;
+
     let blanks = [];
+    let days = [];
+
     // added
     const firstDayLastMonth = subDays(firstOfMonth, firstDayOfMonth);
 
@@ -113,7 +116,20 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
         getDate(addDays(firstDayLastMonth, i))
       );
     }
-    console.log(blanks)
+    console.log(...blanks);
+
+    let daysOfMonth = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      daysOfMonth.push(d);
+    }
+
+
+    for (let i = 0; i < daysInMonth; i++) {
+      days.push(
+        getDate(addDays(firstDayLastMonth, i))
+      );
+    }
+    console.log(...days);
     const gridDays = chunk([
       ...Array.from({ length: startWeekday }).fill(null),
       ...Array.from({ length: daysInMonth }, (_, i) => setDate(selectedDate, i + 1)),
@@ -125,8 +141,8 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
   const handleTableKeyPress = (e) => {
     const keyCode = e.keyCode;
     // Check if control key was pressed
-    // const control = e.ctrlKey;
-    const control = e.shiftKey;
+    const control = e.ctrlKey;
+    // const control = e.shiftKey;
     switch (keyCode) {
       case 13: //Enter
         handleSelectDate(format(selectedDate, "yyyy-MM-dd"));
