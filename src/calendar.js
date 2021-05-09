@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   format,
   startOfMonth,
@@ -16,11 +16,16 @@ import {
   addWeeks,
   subDays,
   addDays
-} from 'date-fns';
-import { chunk } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import './App.css';
+} from "date-fns";
+import { chunk } from "lodash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAngleDoubleLeft,
+  faAngleDoubleRight
+} from "@fortawesome/free-solid-svg-icons";
+import "./App.css";
 
 const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
   const [selectedDate, setSelectedDate] = useState(new Date(date));
@@ -98,43 +103,44 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
 
   const generateMonth = () => {
     const daysInMonth = getDaysInMonth(selectedDate);
+    // const startWeekday = getDay(startOfMonth(selectedDate));
+    // const endWeekday = getDay(endOfMonth(selectedDate));
+
+    // returns - Mon Mar 01 2021 00:00:00 GMT-0500 (Eastern Standard Time)
+    const firstOfMonth = startOfMonth(selectedDate);
+    const lastOfMonth = endOfMonth(selectedDate);
+    // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
     const startWeekday = getDay(startOfMonth(selectedDate));
     const endWeekday = getDay(endOfMonth(selectedDate));
-    // added 
-    const firstOfMonth = startOfMonth(selectedDate);
-    // % 7 makes the dates 0-index, 0 == sun, 6 == sat
-    const firstDayOfMonth = getDay(startOfMonth(selectedDate)) % 7;
+    const daysLeft = 6 - endWeekday;
 
-    let blanks = [];
-    let days = [];
+    let previous = [];
+    let next = [];
 
-    // added
-    const firstDayLastMonth = subDays(firstOfMonth, firstDayOfMonth);
-
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      blanks.push(
-        getDate(addDays(firstDayLastMonth, i))
-      );
+    const firstDayLastMonth = subDays(firstOfMonth, startWeekday);
+    const firstDayNextMonth = addDays(lastOfMonth, 1);
+    console.log(firstDayNextMonth) //Sun Apr 25 2021 00:00:00 GMT-0400
+    for (let i = 0; i < startWeekday; i++) {
+      previous.push(getDate(addDays(firstDayLastMonth, i)));
     }
-    console.log(...blanks);
+    console.log(...previous);
 
-    let daysOfMonth = [];
-    for (let d = 1; d <= daysInMonth; d++) {
-      daysOfMonth.push(d);
+    for (let i = 0; i < daysLeft; i++) {
+      next.push(getDate(addDays(firstDayNextMonth, i)));
     }
+    console.log(...next);
 
-
-    for (let i = 0; i < daysInMonth; i++) {
-      days.push(
-        getDate(addDays(firstDayLastMonth, i))
-      );
-    }
-    console.log(...days);
-    const gridDays = chunk([
-      ...Array.from({ length: startWeekday }).fill(null),
-      ...Array.from({ length: daysInMonth }, (_, i) => setDate(selectedDate, i + 1)),
-      ...Array.from({ length: (6 - endWeekday) }).fill(null)
-    ], 7);
+    const gridDays = chunk(
+      [
+        ...previous.map((day) => setDate(firstDayLastMonth, day)),
+        ...Array.from({ length: daysInMonth }, (_, i) =>
+          setDate(selectedDate, i + 1)
+        ),
+        // ...Array.from({ length: 6 - endWeekday }).fill(null)
+        ...next.map((day) => setDate(firstDayNextMonth, day)),
+      ],
+      7
+    );
     return gridDays;
   };
 
@@ -213,9 +219,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
           </div>
         </div>
         <div className="month" role="heading">
-          <b>
-            {format(selectedDate, "MMMM yyyy")}
-          </b>
+          <b>{format(selectedDate, "MMMM yyyy")}</b>
         </div>
         <div className="icons">
           <div
@@ -249,23 +253,37 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
       >
         <thead>
           <tr role="row">
-            <th className="header" role="columnheader" aria-label="Sunday"><abbr title="Sunday">Su</abbr></th>
-            <th className="header" role="columnheader" aria-label="Monday"><abbr title="Monday">Mo</abbr></th>
-            <th className="header" role="columnheader" aria-label="Tuesday"><abbr title="Tuesday">Tu</abbr></th>
-            <th className="header" role="columnheader" aria-label="Wednesday"><abbr title="Wednesday">We</abbr></th>
-            <th className="header" role="columnheader" aria-label="Thursday"><abbr title="Thursday">Th</abbr></th>
-            <th className="header" role="columnheader" aria-label="Friday"><abbr title="Friday">Fr</abbr></th>
-            <th className="header" role="columnheader" aria-label="Saturday"><abbr title="Saturday">Sa</abbr></th>
+            <th className="header" role="columnheader" aria-label="Sunday">
+              <abbr title="Sunday">Su</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Monday">
+              <abbr title="Monday">Mo</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Tuesday">
+              <abbr title="Tuesday">Tu</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Wednesday">
+              <abbr title="Wednesday">We</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Thursday">
+              <abbr title="Thursday">Th</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Friday">
+              <abbr title="Friday">Fr</abbr>
+            </th>
+            <th className="header" role="columnheader" aria-label="Saturday">
+              <abbr title="Saturday">Sa</abbr>
+            </th>
           </tr>
         </thead>
         <tbody>
           {generateMonth().map((week, i) => (
             <tr className="week" key={`week-${i}`} role="row">
-              { week.map((day, i) => (
-                day
-                  ?
+              {week.map((day, i) =>
+                day ? (
                   <td
-                    className={`cell${isEqual(selectedDate, day) ? ' active' : ''}`}
+                    className={`cell${isEqual(selectedDate, day) ? " active" : ""
+                      }`}
                     key={`day-cell-${i}`}
                     onClick={() => handleDateSelection(day)}
                     role="gridcell"
@@ -273,9 +291,12 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
                   >
                     {getDate(day)}
                   </td>
-                  :
-                  <td className="empty" key={`day-cell-${i}`}>&nbsp;</td>
-              ))}
+                ) : (
+                  <td className="empty" key={`day-cell-${i}`}>
+                    &nbsp;
+                  </td>
+                )
+              )}
             </tr>
           ))}
         </tbody>
