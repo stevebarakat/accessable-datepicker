@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useReducer  } from "react";
+import dateReducer from './dateReducer';
+
 import {
   format,
   startOfMonth,
@@ -25,29 +27,28 @@ import {
   faAngleDoubleLeft,
   faAngleDoubleRight
 } from "@fortawesome/free-solid-svg-icons";
-import "./App.css";
 
 const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date(date));
+  const [state, dispatch] = useReducer(dateReducer, {selectedDate: new Date(date)});
 
   const setPreviousMonth = () => {
-    const previousMonth = subMonths(selectedDate, 1);
-    setSelectedDate(startOfMonth(previousMonth));
+    const previousMonth = subMonths(state.selectedDate, 1);
+    dispatch({type: "SET_PREVIOUS_MONTH", payload: startOfMonth(previousMonth)});
   };
 
   const setNextMonth = () => {
-    const nextMonth = addMonths(selectedDate, 1);
-    setSelectedDate(startOfMonth(nextMonth));
+    const nextMonth = addMonths(state.selectedDate, 1);
+    dispatch({type: "SET_NEXT_MONTH", payload: startOfMonth(nextMonth)});
   };
 
   const setPreviousYear = () => {
-    const previousYear = subYears(selectedDate, 1);
-    setSelectedDate(startOfMonth(previousYear));
+    const previousYear = subYears(state.selectedDate, 1);
+    dispatch({type: "SET_PREVIOUS_YEAR", payload: startOfMonth(previousYear)});
   };
 
   const setNextYear = () => {
-    const nextYear = addYears(selectedDate, 1);
-    setSelectedDate(startOfMonth(nextYear));
+    const nextYear = addYears(state.selectedDate, 1);
+    dispatch({type: "SET_NEXT_YEAR", payload: startOfMonth(nextYear)})
   };
 
   const handleKeyPress = (e, cb) => {
@@ -57,61 +58,58 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     }
   };
 
-  const setPreviousDay = () => {
-    const previousDay = subDays(selectedDate, 1);
-    setSelectedDate(previousDay);
-  };
+  // const setPreviousDay = () => {
+  //   const previousDay = subDays(state.selectedDate, 1);
+  //   setSelectedDate(previousDay);
+  // };
 
-  const setNextDay = () => {
-    const nextDay = addDays(selectedDate, 1);
-    setSelectedDate(nextDay);
-  };
+  // const setNextDay = () => {
+  //   const nextDay = addDays(state.selectedDate, 1);
+  //   setSelectedDate(nextDay);
+  // };
 
-  const setPreviousWeek = () => {
-    const previousWeek = subWeeks(selectedDate, 1);
-    setSelectedDate(previousWeek);
-  };
+  // const setPreviousWeek = () => {
+  //   const previousWeek = subWeeks(state.selectedDate, 1);
+  //   setSelectedDate(previousWeek);
+  // };
 
-  const setNextWeek = () => {
-    const nextWeek = addWeeks(selectedDate, 1);
-    setSelectedDate(nextWeek);
-  };
+  // const setNextWeek = () => {
+  //   const nextWeek = addWeeks(state.selectedDate, 1);
+  //   setSelectedDate(nextWeek);
+  // };
 
-  const setDatePreviousMonth = () => {
-    setSelectedDate(subMonths(selectedDate, 1));
-  };
+  // const setDatePreviousMonth = () => {
+  //   setSelectedDate(subMonths(state.selectedDate, 1));
+  // };
 
-  const setDateNextMonth = () => {
-    setSelectedDate(addMonths(selectedDate, 1));
-  };
+  // const setDateNextMonth = () => {
+  //   setSelectedDate(addMonths(state.selectedDate, 1));
+  // };
 
-  const setDatePreviousYear = () => {
-    setSelectedDate(subYears(selectedDate, 1));
-  };
+  // const setDatePreviousYear = () => {
+  //   setSelectedDate(subYears(state.selectedDate, 1));
+  // };
 
-  const setDateNextYear = () => {
-    setSelectedDate(addYears(selectedDate, 1));
-  };
+  // const setDateNextYear = () => {
+  //   setSelectedDate(addYears(state.selectedDate, 1));
+  // };
 
-  const setMonthStart = () => {
-    setSelectedDate(startOfMonth(selectedDate));
-  };
+  // const setMonthStart = () => {
+  //   setSelectedDate(startOfMonth(state.selectedDate));
+  // };
 
-  const setMonthEnd = () => {
-    setSelectedDate(endOfMonth(selectedDate));
-  };
+  // const setMonthEnd = () => {
+  //   setSelectedDate(endOfMonth(state.selectedDate));
+  // };
 
   const generateMonth = () => {
-    const daysInMonth = getDaysInMonth(selectedDate);
-    // const startWeekday = getDay(startOfMonth(selectedDate));
-    // const endWeekday = getDay(endOfMonth(selectedDate));
-
+    const daysInMonth = getDaysInMonth(state.selectedDate);
     // returns - Mon Mar 01 2021 00:00:00 GMT-0500 (Eastern Standard Time)
-    const firstOfMonth = startOfMonth(selectedDate);
-    const lastOfMonth = endOfMonth(selectedDate);
+    const firstOfMonth = startOfMonth(state.selectedDate);
+    const lastOfMonth = endOfMonth(state.selectedDate);
     // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
-    const startWeekday = getDay(startOfMonth(selectedDate));
-    const endWeekday = getDay(endOfMonth(selectedDate));
+    const startWeekday = getDay(startOfMonth(state.selectedDate));
+    const endWeekday = getDay(endOfMonth(state.selectedDate));
     const daysLeft = 6 - endWeekday;
 
     let previous = [];
@@ -123,20 +121,17 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     for (let i = 0; i < startWeekday; i++) {
       previous.push(getDate(addDays(firstDayLastMonth, i)));
     }
-    console.log(...previous);
 
     for (let i = 0; i < daysLeft; i++) {
       next.push(getDate(addDays(firstDayNextMonth, i)));
     }
-    console.log(...next);
 
     const gridDays = chunk(
       [
         ...previous.map((day) => setDate(firstDayLastMonth, day)),
         ...Array.from({ length: daysInMonth }, (_, i) =>
-          setDate(selectedDate, i + 1)
+          setDate(state.selectedDate, i + 1)
         ),
-        // ...Array.from({ length: 6 - endWeekday }).fill(null)
         ...next.map((day) => setDate(firstDayNextMonth, day)),
       ],
       7
@@ -144,49 +139,49 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     return gridDays;
   };
 
-  const handleTableKeyPress = (e) => {
-    const keyCode = e.keyCode;
-    // Check if control key was pressed
-    const control = e.ctrlKey;
-    // const control = e.shiftKey;
-    switch (keyCode) {
-      case 13: //Enter
-        handleSelectDate(format(selectedDate, "yyyy-MM-dd"));
-        return;
-      case 27: //Esc
-        closeCalendar();
-        return;
-      case 32: //Space
-        handleSelectDate(format(selectedDate, "yyyy-MM-dd"));
-        return;
-      case 33: //Page Up
-        control ? setDatePreviousYear() : setDatePreviousMonth();
-        return;
-      case 34: //Page Down
-        control ? setDateNextYear() : setDateNextMonth();
-        return;
-      case 35: //End
-        setMonthEnd();
-        return;
-      case 36: //Home
-        setMonthStart();
-        return;
-      case 37: //Left
-        setPreviousDay();
-        return;
-      case 38: //Up
-        setPreviousWeek();
-        return;
-      case 39: //Right
-        setNextDay();
-        return;
-      case 40: //Down
-        setNextWeek();
-        return;
-      default:
-        return;
-    }
-  };
+  // const handleTableKeyPress = (e) => {
+  //   const keyCode = e.keyCode;
+  //   // Check if control key was pressed
+  //   const control = e.ctrlKey;
+  //   // const control = e.shiftKey;
+  //   switch (keyCode) {
+  //     case 13: //Enter
+  //       handleSelectDate(format(state.selectedDate, "yyyy-MM-dd"));
+  //       return;
+  //     case 27: //Esc
+  //       closeCalendar();
+  //       return;
+  //     case 32: //Space
+  //       handleSelectDate(format(state.selectedDate, "yyyy-MM-dd"));
+  //       return;
+  //     case 33: //Page Up
+  //       control ? setDatePreviousYear() : setDatePreviousMonth();
+  //       return;
+  //     case 34: //Page Down
+  //       control ? setDateNextYear() : setDateNextMonth();
+  //       return;
+  //     case 35: //End
+  //       setMonthEnd();
+  //       return;
+  //     case 36: //Home
+  //       setMonthStart();
+  //       return;
+  //     case 37: //Left
+  //       setPreviousDay();
+  //       return;
+  //     case 38: //Up
+  //       setPreviousWeek();
+  //       return;
+  //     case 39: //Right
+  //       setNextDay();
+  //       return;
+  //     case 40: //Down
+  //       setNextWeek();
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // };
 
   const handleDateSelection = (date) => {
     const dateString = format(date, "yyyy-MM-dd");
@@ -219,7 +214,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
           </div>
         </div>
         <div className="month" role="heading">
-          <b>{format(selectedDate, "MMMM yyyy")}</b>
+          <b>{format(state.selectedDate, "MMMM yyyy")}</b>
         </div>
         <div className="icons">
           <div
@@ -247,7 +242,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
       <table
         id="grid"
         tabIndex="0"
-        onKeyDown={handleTableKeyPress}
+        // onKeyDown={handleTableKeyPress}
         role="grid"
         aria-label="Month"
       >
@@ -282,12 +277,12 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
               {week.map((day, i) =>
                 day ? (
                   <td
-                    className={`cell${isEqual(selectedDate, day) ? " active" : ""
+                    className={`cell${isEqual(state.selectedDate, day) ? " active" : ""
                       }`}
                     key={`day-cell-${i}`}
                     onClick={() => handleDateSelection(day)}
                     role="gridcell"
-                    aria-selected={isEqual(selectedDate, day)}
+                    aria-selected={isEqual(state.selectedDate, day)}
                   >
                     {getDate(day)}
                   </td>

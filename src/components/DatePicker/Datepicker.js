@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+
 const Datepicker = ({ date, handleSelect }) => {
   const handleKeyPress = (e) => {
     const charCode = e.charCode

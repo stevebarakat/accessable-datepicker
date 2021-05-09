@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import Datepicker from "./datepicker";
-import Calendar from "./calendar";
+import Datepicker from "./components/DatePicker/Datepicker";
+import Calendar from "./components/DatePicker/Calendar";
 import './App.css';
 
 const App = () => {
