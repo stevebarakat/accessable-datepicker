@@ -25,12 +25,12 @@ const App = () => {
   
   return (
     <div className="App" role="application">
-      {showDatepicker && (
-        <Datepicker date={date} handleSelect={toggleCalendar}/>
-      )}
-      {showCalendar && (
+      {/* {showDatepicker && ( */}
+        {/* <Datepicker date={date} handleSelect={toggleCalendar}/> */}
+      {/* )} */}
+      {/* {showCalendar && ( */}
         <Calendar date={date} handleSelectDate={handleSelectDate} closeCalendar={closeCalendar} />
-      )}
+      {/* )} */}
     </div>
   );
 };
