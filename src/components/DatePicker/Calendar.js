@@ -1,5 +1,5 @@
-import React, { useState, useReducer  } from "react";
-import dateReducer from './dateReducer';
+import React, { useReducer  } from "react";
+import selectedDateReducer from './selectedDateReducer';
 
 import {
   format,
@@ -29,25 +29,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
-  const [state, dispatch] = useReducer(dateReducer, {selectedDate: new Date(date)});
+  const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
 
   const setPreviousMonth = () => {
-    const previousMonth = subMonths(state.selectedDate, 1);
+    const previousMonth = subMonths(state, 1);
     dispatch({type: "SET_PREVIOUS_MONTH", payload: startOfMonth(previousMonth)});
   };
 
   const setNextMonth = () => {
-    const nextMonth = addMonths(state.selectedDate, 1);
+    const nextMonth = addMonths(state, 1);
     dispatch({type: "SET_NEXT_MONTH", payload: startOfMonth(nextMonth)});
   };
 
   const setPreviousYear = () => {
-    const previousYear = subYears(state.selectedDate, 1);
+    const previousYear = subYears(state, 1);
     dispatch({type: "SET_PREVIOUS_YEAR", payload: startOfMonth(previousYear)});
   };
 
   const setNextYear = () => {
-    const nextYear = addYears(state.selectedDate, 1);
+    const nextYear = addYears(state, 1);
     dispatch({type: "SET_NEXT_YEAR", payload: startOfMonth(nextYear)})
   };
 
@@ -59,57 +59,57 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
   };
 
   // const setPreviousDay = () => {
-  //   const previousDay = subDays(state.selectedDate, 1);
+  //   const previousDay = subDays(state, 1);
   //   setSelectedDate(previousDay);
   // };
 
   // const setNextDay = () => {
-  //   const nextDay = addDays(state.selectedDate, 1);
+  //   const nextDay = addDays(state, 1);
   //   setSelectedDate(nextDay);
   // };
 
   // const setPreviousWeek = () => {
-  //   const previousWeek = subWeeks(state.selectedDate, 1);
+  //   const previousWeek = subWeeks(state, 1);
   //   setSelectedDate(previousWeek);
   // };
 
   // const setNextWeek = () => {
-  //   const nextWeek = addWeeks(state.selectedDate, 1);
+  //   const nextWeek = addWeeks(state, 1);
   //   setSelectedDate(nextWeek);
   // };
 
   // const setDatePreviousMonth = () => {
-  //   setSelectedDate(subMonths(state.selectedDate, 1));
+  //   setSelectedDate(subMonths(state, 1));
   // };
 
   // const setDateNextMonth = () => {
-  //   setSelectedDate(addMonths(state.selectedDate, 1));
+  //   setSelectedDate(addMonths(state, 1));
   // };
 
   // const setDatePreviousYear = () => {
-  //   setSelectedDate(subYears(state.selectedDate, 1));
+  //   setSelectedDate(subYears(state, 1));
   // };
 
   // const setDateNextYear = () => {
-  //   setSelectedDate(addYears(state.selectedDate, 1));
+  //   setSelectedDate(addYears(state, 1));
   // };
 
   // const setMonthStart = () => {
-  //   setSelectedDate(startOfMonth(state.selectedDate));
+  //   setSelectedDate(startOfMonth(state));
   // };
 
   // const setMonthEnd = () => {
-  //   setSelectedDate(endOfMonth(state.selectedDate));
+  //   setSelectedDate(endOfMonth(state));
   // };
 
   const generateMonth = () => {
-    const daysInMonth = getDaysInMonth(state.selectedDate);
+    const daysInMonth = getDaysInMonth(state);
     // returns - Mon Mar 01 2021 00:00:00 GMT-0500 (Eastern Standard Time)
-    const firstOfMonth = startOfMonth(state.selectedDate);
-    const lastOfMonth = endOfMonth(state.selectedDate);
+    const firstOfMonth = startOfMonth(state);
+    const lastOfMonth = endOfMonth(state);
     // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
-    const startWeekday = getDay(startOfMonth(state.selectedDate));
-    const endWeekday = getDay(endOfMonth(state.selectedDate));
+    const startWeekday = getDay(startOfMonth(state));
+    const endWeekday = getDay(endOfMonth(state));
     const daysLeft = 6 - endWeekday;
 
     let previous = [];
@@ -130,7 +130,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
       [
         ...previous.map((day) => setDate(firstDayLastMonth, day)),
         ...Array.from({ length: daysInMonth }, (_, i) =>
-          setDate(state.selectedDate, i + 1)
+          setDate(state, i + 1)
         ),
         ...next.map((day) => setDate(firstDayNextMonth, day)),
       ],
@@ -146,13 +146,13 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
   //   // const control = e.shiftKey;
   //   switch (keyCode) {
   //     case 13: //Enter
-  //       handleSelectDate(format(state.selectedDate, "yyyy-MM-dd"));
+  //       handleSelectDate(format(state, "yyyy-MM-dd"));
   //       return;
   //     case 27: //Esc
   //       closeCalendar();
   //       return;
   //     case 32: //Space
-  //       handleSelectDate(format(state.selectedDate, "yyyy-MM-dd"));
+  //       handleSelectDate(format(state, "yyyy-MM-dd"));
   //       return;
   //     case 33: //Page Up
   //       control ? setDatePreviousYear() : setDatePreviousMonth();
@@ -214,7 +214,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
           </div>
         </div>
         <div className="month" role="heading">
-          <b>{format(state.selectedDate, "MMMM yyyy")}</b>
+          <b>{format(state, "MMMM yyyy")}</b>
         </div>
         <div className="icons">
           <div
@@ -277,12 +277,12 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
               {week.map((day, i) =>
                 day ? (
                   <td
-                    className={`cell${isEqual(state.selectedDate, day) ? " active" : ""
+                    className={`cell${isEqual(state, day) ? " active" : ""
                       }`}
                     key={`day-cell-${i}`}
                     onClick={() => handleDateSelection(day)}
                     role="gridcell"
-                    aria-selected={isEqual(state.selectedDate, day)}
+                    aria-selected={isEqual(state, day)}
                   >
                     {getDate(day)}
                   </td>
