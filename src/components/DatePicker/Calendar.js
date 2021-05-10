@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 import selectedDateReducer from './selectedDateReducer';
 
 import {
@@ -30,8 +30,7 @@ import {
 
 const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
   const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
-
-
+  const selectedDay = useRef(null);
 
   const handleKeyPress = (e, cb) => {
     const charCode = e.keyCode;
@@ -79,28 +78,26 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
 
   const handleTableKeyPress = (e) => {
     const keyCode = e.keyCode;
-    // Check if control key was pressed
-    const control = e.ctrlKey;
-    // const control = e.shiftKey;
+    selectedDay.current.focus();
+    // Check if shift key was pressed
+    const shift = e.shiftKey;
     switch (keyCode) {
       case 13: //Enter
+      case 32: //Space
         handleSelectDate(format(state, "yyyy-MM-dd"));
         return;
       case 27: //Esc
         closeCalendar();
         return;
-      case 32: //Space
-        handleSelectDate(format(state, "yyyy-MM-dd"));
-        return;
       case 33: //Page Up
-        control ?
-          dispatch({ type: "SET_DATE_PREVIOUS_YEAR" }) :
-          dispatch({ type: "SET_DATE_PREVIOUS_MONTH" });
-        return;
-      case 34: //Page Down
-        control ?
+        shift ?
           dispatch({ type: "SET_DATE_NEXT_YEAR" }) :
           dispatch({ type: "SET_DATE_NEXT_MONTH" });
+        return;
+      case 34: //Page Down
+        shift ?
+          dispatch({ type: "SET_DATE_PREVIOUS_YEAR" }) :
+          dispatch({ type: "SET_DATE_PREVIOUS_MONTH" });
         return;
       case 35: //End
         dispatch({ type: "SET_MONTH_END" });
@@ -225,8 +222,11 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
                     onClick={() => handleDateSelection(day)}
                     role="gridcell"
                     aria-selected={isEqual(state, day)}
+                    ref={selectedDay}
                   >
-                    <span role="alert">{getDate(day)}</span>
+                    <span role="alert">
+                      {getDate(day)}
+                    </span>
                   </td>
                 ) : (
                   <td className="empty" key={`day-cell-${i}`}>
