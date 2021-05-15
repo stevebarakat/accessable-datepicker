@@ -1,4 +1,5 @@
 .App {
+  font-family: arial, helvetica, sans-serif;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -10,21 +11,27 @@
   box-sizing: border-box;
 }
 *:focus {
-  outline: 2px solid #d71ef7;
+  outline: 2px solid red;
+}
+abbr[title] {
+  text-decoration: none;
 }
 
 .datepicker {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
   border: 1px solid black;
   cursor: pointer;
 }
 .datepicker > div {
-  padding: 10px 20px;
+  flex-grow: 1;
+  padding: 10px;
+  text-align: center;
+  margin: 0 auto;
 }
 .datepicker > div:nth-child(1) {
   border-right: 1px solid black;
-  background-color: #00b5ad;
   color: #000000;
 }
 
@@ -32,7 +39,7 @@
   width: 300px;
   display: flex;
   flex-direction: column;
-  border: 2px solid black;
+  border: 1px solid black;
   padding: 2px;
 }
 
@@ -41,9 +48,8 @@
   flex-direction: row;
   justify-content: space-between;
   font-size: 16px;
-  background-color: #00b5ad;
   padding: 10px 0;
-  border: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .icons {
@@ -67,16 +73,12 @@
 .cell {
   border: 1px solid black;
   height: 30px;
-  font-family: arial, helvetica, sans-serif;
   font-size: 16px;
+  aspect-ratio: 1/1;
 }
 
+.cell.active,
 .cell:hover {
-  background-color: #fc3;
-  border-color: #800;
-}
-
-.cell.active {
-  background-color: #fc3;
-  border-color: #800;
+  background-color: black;
+  color: white;
 }
