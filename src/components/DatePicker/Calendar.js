@@ -1,15 +1,21 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 import selectedDateReducer from './selectedDateReducer';
 
 import {
   format,
   startOfMonth,
+  subMonths,
+  addMonths,
+  subYears,
+  addYears,
   getDaysInMonth,
   getDay,
   endOfMonth,
   setDate,
   getDate,
   isEqual,
+  subWeeks,
+  addWeeks,
   subDays,
   addDays
 } from "date-fns";
@@ -22,45 +28,9 @@ import {
   faAngleDoubleRight
 } from "@fortawesome/free-solid-svg-icons";
 
-
-const useGenerateMonth = (state) => {
-  const daysInMonth = getDaysInMonth(state);
-  const firstOfMonth = startOfMonth(state);
-  const lastOfMonth = endOfMonth(state);
-  // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
-  const startWeekday = getDay(startOfMonth(state));
-  const endWeekday = getDay(endOfMonth(state));
-  const daysLeft = 6 - endWeekday;
-
-  let lastDaysOfPreviousMonth = [];
-  let firstDaysOfNextMonth = [];
-
-  const firstDayLastMonth = subDays(firstOfMonth, startWeekday);
-  const firstDayNextMonth = addDays(lastOfMonth, 1);
-  for (let i = 0; i < startWeekday; i++) {
-    firstDaysOfNextMonth.push(getDate(addDays(firstDayLastMonth, i)));
-  }
-
-  for (let i = 0; i < daysLeft; i++) {
-    firstDaysOfNextMonth.push(getDate(addDays(firstDayNextMonth, i)));
-  }
-
-  const gridDays = chunk(
-    [
-      ...lastDaysOfPreviousMonth.map((day) => setDate(firstDayLastMonth, day)),
-      ...Array.from({ length: daysInMonth }, (_, i) =>
-        setDate(state, i + 1)
-      ),
-      ...firstDaysOfNextMonth.map((day) => setDate(firstDayNextMonth, day)),
-    ],
-    7
-  );
-  return gridDays;
-};
-
-
-const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
+const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
   const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
+  const selectedDay = useRef(null);
   const selectedDayRef = useRef(null);
 
   useEffect(() => {
@@ -74,8 +44,46 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     }
   };
 
+  const generateMonth = () => {
+    const daysInMonth = getDaysInMonth(state);
+    // returns - Mon Mar 01 2021 00:00:00 GMT-0500 (Eastern Standard Time)
+    const firstOfMonth = startOfMonth(state);
+    const lastOfMonth = endOfMonth(state);
+    // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
+    const startWeekday = getDay(startOfMonth(state));
+    const endWeekday = getDay(endOfMonth(state));
+    const daysLeft = 6 - endWeekday;
+
+    let previous = [];
+    let next = [];
+
+    const firstDayLastMonth = subDays(firstOfMonth, startWeekday);
+    const firstDayNextMonth = addDays(lastOfMonth, 1);
+    console.log(firstDayNextMonth); //Sun Apr 25 2021 00:00:00 GMT-0400
+    for (let i = 0; i < startWeekday; i++) {
+      previous.push(getDate(addDays(firstDayLastMonth, i)));
+    }
+
+    for (let i = 0; i < daysLeft; i++) {
+      next.push(getDate(addDays(firstDayNextMonth, i)));
+    }
+
+    const gridDays = chunk(
+      [
+        ...previous.map((day) => setDate(firstDayLastMonth, day)),
+        ...Array.from({ length: daysInMonth }, (_, i) =>
+          setDate(state, i + 1)
+        ),
+        ...next.map((day) => setDate(firstDayNextMonth, day)),
+      ],
+      7
+    );
+    return gridDays;
+  };
+
   const handleTableKeyPress = (e) => {
     const keyCode = e.keyCode;
+    <selectedDayRef></selectedDayRef>.current.focus();
     // Check if shift key was pressed
     const shift = e.shiftKey;
     switch (keyCode) {
@@ -119,18 +127,20 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
     }
   };
 
+  const handleDateSelection = (date) => {
+    const dateString = format(date, "yyyy-MM-dd");
+    handleSelectDate(dateString);
+  };
+
   return (
     <div className="calendar">
-
-      {/* START HEADER */}
-
       <div className="title">
         <div className="icons">
           <div
             className="iconContainer"
             tabIndex="0"
             onClick={() => dispatch({ type: "SET_PREVIOUS_YEAR" })}
-            onKeyPress={e => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))}
+            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))}
             role="button"
             aria-label="Previous year"
           >
@@ -140,7 +150,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
             className="iconContainer"
             tabIndex="0"
             onClick={() => dispatch({ type: "SET_PREVIOUS_MONTH" })}
-            onKeyPress={e => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))}
+            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))}
             role="button"
             aria-label="Previous month"
           >
@@ -155,7 +165,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
             className="iconContainer"
             tabIndex="0"
             onClick={() => dispatch({ type: "SET_NEXT_MONTH" })}
-            onKeyPress={e => handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))}
+            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))}
             role="button"
             aria-label="Next month"
           >
@@ -165,7 +175,7 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
             className="iconContainer"
             tabIndex="0"
             onClick={() => dispatch({ type: "SET_NEXT_YEAR" })}
-            onKeyPress={e => handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))}
+            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))}
             role="button"
             aria-label="Next year"
           >
@@ -173,9 +183,6 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
           </div>
         </div>
       </div>
-
-      {/* END HEADER */}
-
       <table
         id="grid"
         tabIndex="0"
@@ -183,62 +190,59 @@ const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
         role="grid"
         aria-label="Month"
       >
-
-        {/* START WEEKDAYS */}
-
         <thead>
           <tr role="row">
             <th className="header" role="columnheader" aria-label="Sunday">
-              <abbr title="Sunday">Sun</abbr>
+              <abbr title="Sunday">Su</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Monday">
-              <abbr title="Monday">Mon</abbr>
+              <abbr title="Monday">Mo</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Tuesday">
-              <abbr title="Tuesday">Tue</abbr>
+              <abbr title="Tuesday">Tu</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Wednesday">
-              <abbr title="Wednesday">Wed</abbr>
+              <abbr title="Wednesday">We</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Thursday">
-              <abbr title="Thursday">Thu</abbr>
+              <abbr title="Thursday">Th</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Friday">
-              <abbr title="Friday">Fri</abbr>
+              <abbr title="Friday">Fr</abbr>
             </th>
             <th className="header" role="columnheader" aria-label="Saturday">
-              <abbr title="Saturday">Sat</abbr>
+              <abbr title="Saturday">Sa</abbr>
             </th>
           </tr>
         </thead>
-
-        {/* END WEEKDAYS */}
-        {/* START MONTH */}
-
         <tbody>
-          {useGenerateMonth(state).map((week, i) => (
+          {generateMonth().map((week, i) => (
             <tr className="week" key={`week-${i}`} role="row">
               {week.map((day, i) =>
-              (
-                <td
-                  tabIndex={0}
-                  className={`cell ${isEqual(state, day) ? "active" : ""}`}
-                  ref={isEqual(state, day) ? selectedDayRef : null}
-                  key={`day-cell-${i}`}
-                  onClick={() => handleSelectDate(format(day, "yyy-MM-dd"))}
-                  role="gridcell"
-                  aria-selected={isEqual(state, day)}
-                >
-                  {getDate(day)}
-                </td>
-              )
+                day ? (
+                  <td
+                    tabIndex={0}
+                    className={`cell${isEqual(state, day) ? " active" : ""
+                      }`}
+                    key={`day-cell-${i}`}
+                    onClick={() => handleDateSelection(day)}
+                    role="gridcell"
+                    aria-selected={isEqual(state, day)}
+                    ref={isEqual(state, day) ? selectedDayRef : null}
+                  >
+                    <span role="alert">
+                      {getDate(day)}
+                    </span>
+                  </td>
+                ) : (
+                  <td className="empty" key={`day-cell-${i}`}>
+                    &nbsp;
+                  </td>
+                )
               )}
             </tr>
           ))}
         </tbody>
-
-        {/* END MONTH */}
-
       </table>
     </div>
   );
