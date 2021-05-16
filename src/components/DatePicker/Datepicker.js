@@ -1,4 +1,5 @@
 import React from 'react';
+import { format } from 'date-fns';
 
 const Datepicker = ({ date, handleSelect }) => {
   const handleKeyPress = (e) => {
@@ -20,7 +21,7 @@ const Datepicker = ({ date, handleSelect }) => {
         Select a date
       </div>
       <div aria-label="Selected date">
-        {date}
+        {format(new Date(date), "yyyy-MM-dd")}
       </div>
     </div>
   );

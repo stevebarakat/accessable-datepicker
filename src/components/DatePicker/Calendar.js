@@ -3,19 +3,14 @@ import selectedDateReducer from './selectedDateReducer';
 
 import {
   format,
+  formatISO,
   startOfMonth,
-  subMonths,
-  addMonths,
-  subYears,
-  addYears,
   getDaysInMonth,
-  getDay,
+  getISODay,
   endOfMonth,
   setDate,
   getDate,
   isEqual,
-  subWeeks,
-  addWeeks,
   subDays,
   addDays
 } from "date-fns";
@@ -30,7 +25,6 @@ import {
 
 const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
   const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
-  const selectedDay = useRef(null);
   const selectedDayRef = useRef(null);
 
   useEffect(() => {
@@ -50,8 +44,8 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
     const firstOfMonth = startOfMonth(state);
     const lastOfMonth = endOfMonth(state);
     // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
-    const startWeekday = getDay(startOfMonth(state));
-    const endWeekday = getDay(endOfMonth(state));
+    const startWeekday = getISODay(startOfMonth(state));
+    const endWeekday = getISODay(endOfMonth(state));
     const daysLeft = 6 - endWeekday;
 
     let previous = [];
@@ -89,7 +83,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
     switch (keyCode) {
       case 13: //Enter
       case 32: //Space
-        handleSelectDate(format(state, "yyyy-MM-dd"));
+        handleSelectDate(formatISO(state, "yyyy-MM-dd"));
         return;
       case 27: //Esc
         closeCalendar();
@@ -128,8 +122,8 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
   };
 
   const handleDateSelection = (date) => {
-    const dateString = format(date, "yyyy-MM-dd");
-    handleSelectDate(dateString);
+    const dateISO = formatISO(date);
+    handleSelectDate(dateISO);
   };
 
   return (
@@ -219,10 +213,10 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
           {generateMonth().map((week, i) => (
             <tr className="week" key={`week-${i}`} role="row">
               {week.map((day, i) =>
-                day ? (
+                day && (
                   <td
                     tabIndex={0}
-                    className={`cell${isEqual(state, day) ? " active" : ""
+                    className={`cell ${isEqual(state, day) ? "active" : ""
                       }`}
                     key={`day-cell-${i}`}
                     onClick={() => handleDateSelection(day)}
@@ -230,15 +224,9 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
                     aria-selected={isEqual(state, day)}
                     ref={isEqual(state, day) ? selectedDayRef : null}
                   >
-                    <span role="alert">
-                      {getDate(day)}
-                    </span>
+                    {getDate(day)}
                   </td>
-                ) : (
-                  <td className="empty" key={`day-cell-${i}`}>
-                    &nbsp;
-                  </td>
-                )
+                ) 
               )}
             </tr>
           ))}
