@@ -83,7 +83,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
 
   const handleTableKeyPress = (e) => {
     const keyCode = e.keyCode;
-    <selectedDayRef></selectedDayRef>.current.focus();
+    selectedDayRef.current.focus();
     // Check if shift key was pressed
     const shift = e.shiftKey;
     switch (keyCode) {
