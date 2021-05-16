@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 import selectedDateReducer from './selectedDateReducer';
 
 import {
@@ -31,6 +31,11 @@ import {
 const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
   const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
   const selectedDay = useRef(null);
+  const selectedDayRef = useRef(null);
+
+  useEffect(() => {
+    selectedDayRef.current.focus();
+  }, [state]);
 
   const handleKeyPress = (e, cb) => {
     const charCode = e.keyCode;
@@ -78,7 +83,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
 
   const handleTableKeyPress = (e) => {
     const keyCode = e.keyCode;
-    selectedDay.current.focus();
+    selectedDayRef.current.focus();
     // Check if shift key was pressed
     const shift = e.shiftKey;
     switch (keyCode) {
@@ -216,13 +221,14 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
               {week.map((day, i) =>
                 day ? (
                   <td
+                    tabIndex={0}
                     className={`cell${isEqual(state, day) ? " active" : ""
                       }`}
                     key={`day-cell-${i}`}
                     onClick={() => handleDateSelection(day)}
                     role="gridcell"
                     aria-selected={isEqual(state, day)}
-                    ref={selectedDay}
+                    ref={isEqual(state, day) ? selectedDayRef : null}
                   >
                     <span role="alert">
                       {getDate(day)}
