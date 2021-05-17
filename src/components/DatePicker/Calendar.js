@@ -40,10 +40,8 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
 
   const generateMonth = () => {
     const daysInMonth = getDaysInMonth(state);
-    // returns - Mon Mar 01 2021 00:00:00 GMT-0500 (Eastern Standard Time)
     const firstOfMonth = startOfMonth(state);
     const lastOfMonth = endOfMonth(state);
-    // % 7 makes the dates 0-index, returns - 0 == sun, 6 == sat
     const startWeekday = getISODay(startOfMonth(state));
     const endWeekday = getISODay(endOfMonth(state));
     const daysLeft = 6 - endWeekday;
@@ -53,7 +51,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
 
     const firstDayLastMonth = subDays(firstOfMonth, startWeekday);
     const firstDayNextMonth = addDays(lastOfMonth, 1);
-    console.log(firstDayNextMonth); //Sun Apr 25 2021 00:00:00 GMT-0400
+    console.log(firstDayNextMonth);
     for (let i = 0; i < startWeekday; i++) {
       previous.push(getDate(addDays(firstDayLastMonth, i)));
     }
@@ -61,17 +59,14 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
     for (let i = 0; i < daysLeft; i++) {
       next.push(getDate(addDays(firstDayNextMonth, i)));
     }
-
+    // concatenate previous, current, and next month dates 
+    // dividing by 7, split into week arrays w/lodash's chunk
     const gridDays = chunk(
-      [
-        ...previous.map((day) => setDate(firstDayLastMonth, day)),
-        ...Array.from({ length: daysInMonth }, (_, i) =>
-          setDate(state, i + 1)
-        ),
-        ...next.map((day) => setDate(firstDayNextMonth, day)),
-      ],
-      7
-    );
+      [...previous.map(day => setDate(firstDayLastMonth, day)),
+      ...Array.from({ length: daysInMonth },
+        (_, i) => setDate(state, i + 1)),
+      ...next.map((day) => setDate(firstDayNextMonth, day))], 7);
+
     return gridDays;
   };
 
@@ -212,21 +207,26 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
         <tbody>
           {generateMonth().map((week, i) => (
             <tr className="week" key={`week-${i}`} role="row">
-              {week.map((day, i) =>
-                day && (
-                  <td
-                    tabIndex={0}
-                    className={`cell ${isEqual(state, day) ? "active" : ""
-                      }`}
-                    key={`day-cell-${i}`}
-                    onClick={() => handleDateSelection(day)}
-                    role="gridcell"
-                    aria-selected={isEqual(state, day)}
-                    ref={isEqual(state, day) ? selectedDayRef : null}
-                  >
-                    {getDate(day)}
-                  </td>
-                ) 
+              {week.map((day, j) => {
+                const date = getDate(day);
+                return (
+                  day && (
+                    <td
+                      tabIndex={0}
+                      style={(i === 0 && date > 22) || (i > 3 && date < 8) ? { color: "red" } : null}
+                      className={`cell ${isEqual(state, day) ? "active" : ""
+                        }`}
+                      key={`day-cell-${j}`}
+                      onClick={() => handleDateSelection(day)}
+                      role="gridcell"
+                      aria-selected={isEqual(state, day)}
+                      ref={isEqual(state, day) ? selectedDayRef : null}
+                    >
+                      {date}
+                    </td>
+                  )
+                );
+              }
               )}
             </tr>
           ))}
