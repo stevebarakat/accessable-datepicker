@@ -241,6 +241,7 @@ const App = () => {
           ))}
         </tbody>
       </table>
+      {format(state, "MM/dd/yyyy")}
     </div>
   );
 };
