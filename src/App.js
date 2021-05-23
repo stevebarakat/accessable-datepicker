@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef, useReducer } from 'react';
 import selectedDateReducer from './selectedDateReducer';
 import './App.css';
 
 import {
-  parse,
-  parseISO,
   format,
-  formatISO,
   startOfMonth,
   getDaysInMonth,
   getDay,
@@ -16,7 +13,6 @@ import {
   isEqual,
   subDays,
   addDays,
-  toDate
 } from "date-fns";
 import { chunk } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -82,10 +78,10 @@ const App = () => {
     switch (keyCode) {
       case 13: //Enter
       case 32: //Space
-        handleSetDate(formatISO(state, "yyyy-MM-dd"));
+        dispatch({ type: "SET_DATE", payload: state });
         return;
       case 27: //Esc
-        // closeCalendar();
+        // close calendar
         return;
       case 33: //Page Up
         shift ?
@@ -120,128 +116,121 @@ const App = () => {
     }
   };
 
-  const handleDateSelection = (date) => {
-    const dateISO = formatISO(date);
-    handleSetDate(dateISO);
-  };
-
-  const handleSetDate = (date) => {
-    dispatch({ type: "SET_DATE", payload: date })
-  };
-
   return (
-    <div className="calendar">
-      <div className="title">
-        <div className="icons">
-          <div
-            className="iconContainer"
-            tabIndex="0"
-            onClick={() => dispatch({ type: "SET_PREVIOUS_YEAR" })}
-            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))}
-            role="button"
-            aria-label="Previous year"
-          >
-            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+    <div className="container">
+      <div className="calendar">
+        <div className="title">
+          <div className="icons">
+            <div
+              className="iconContainer"
+              tabIndex="0"
+              onClick={() => dispatch({ type: "SET_PREVIOUS_YEAR" })}
+              onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))}
+              role="button"
+              aria-label="Previous year"
+            >
+              <FontAwesomeIcon icon={faAngleDoubleLeft} />
+            </div>
+            <div
+              className="iconContainer"
+              tabIndex="0"
+              onClick={() => dispatch({ type: "SET_PREVIOUS_MONTH" })}
+              onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))}
+              role="button"
+              aria-label="Previous month"
+            >
+              <FontAwesomeIcon icon={faAngleLeft} />
+            </div>
           </div>
-          <div
-            className="iconContainer"
-            tabIndex="0"
-            onClick={() => dispatch({ type: "SET_PREVIOUS_MONTH" })}
-            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))}
-            role="button"
-            aria-label="Previous month"
-          >
-            <FontAwesomeIcon icon={faAngleLeft} />
+          <div className="month" role="heading" aria-level="2">
+            {/* {console.log(formatISO(state))} */}
+            <b>{format(state, "MMMM yyyy")}</b>
+          </div>
+          <div className="icons">
+            <div
+              className="iconContainer"
+              tabIndex="0"
+              onClick={() => dispatch({ type: "SET_NEXT_MONTH" })}
+              onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))}
+              role="button"
+              aria-label="Next month"
+            >
+              <FontAwesomeIcon icon={faAngleRight} />
+            </div>
+            <div
+              className="iconContainer"
+              tabIndex="0"
+              onClick={() => dispatch({ type: "SET_NEXT_YEAR" })}
+              onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))}
+              role="button"
+              aria-label="Next year"
+            >
+              <FontAwesomeIcon icon={faAngleDoubleRight} />
+            </div>
           </div>
         </div>
-        <div className="month" role="heading" aria-level="2">
-        {/* {console.log(formatISO(state))} */}
-          <b>{format(state, "MMMM yyyy")}</b>
-        </div>
-        <div className="icons">
-          <div
-            className="iconContainer"
-            tabIndex="0"
-            onClick={() => dispatch({ type: "SET_NEXT_MONTH" })}
-            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))}
-            role="button"
-            aria-label="Next month"
-          >
-            <FontAwesomeIcon icon={faAngleRight} />
-          </div>
-          <div
-            className="iconContainer"
-            tabIndex="0"
-            onClick={() => dispatch({ type: "SET_NEXT_YEAR" })}
-            onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))}
-            role="button"
-            aria-label="Next year"
-          >
-            <FontAwesomeIcon icon={faAngleDoubleRight} />
-          </div>
-        </div>
-      </div>
-      <table
-        id="grid"
-        tabIndex="0"
-        onKeyDown={handleTableKeyPress}
-        role="grid"
-        aria-label="Month"
-      >
-        <thead>
-          <tr role="row">
-            <th className="header" role="columnheader" aria-label="Sunday">
-              <abbr title="Sunday">Su</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Monday">
-              <abbr title="Monday">Mo</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Tuesday">
-              <abbr title="Tuesday">Tu</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Wednesday">
-              <abbr title="Wednesday">We</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Thursday">
-              <abbr title="Thursday">Th</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Friday">
-              <abbr title="Friday">Fr</abbr>
-            </th>
-            <th className="header" role="columnheader" aria-label="Saturday">
-              <abbr title="Saturday">Sa</abbr>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {generateMonth().map((week, i) => (
-            <tr className="week" key={`week-${i}`} role="row">
-              {week.map((day, j) => {
-                const date = getDate(day);
-                return (
-                  day && (
-                    <td
-                      tabIndex={0}
-                      style={(i === 0 && date > 22) || (i > 3 && date < 8) ? { color: "red" } : null}
-                      className={`cell ${isEqual(state, day) ? "active" : ""
-                        }`}
-                      key={`day-cell-${j}`}
-                      onClick={() => dispatch({ type: "SET_DATE", payload: day })}
-                      role="gridcell"
-                      aria-selected={isEqual(state, day)}
-                      ref={isEqual(state, day) ? selectedDayRef : null}
-                    >
-                      {date}
-                    </td>
-                  )
-                );
-              }
-              )}
+        <table
+          id="grid"
+          tabIndex="0"
+          onKeyDown={handleTableKeyPress}
+          role="grid"
+          aria-label="Month"
+        >
+          <thead>
+            <tr role="row">
+              <th className="header" role="columnheader" aria-label="Sunday">
+                <abbr title="Sunday">Su</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Monday">
+                <abbr title="Monday">Mo</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Tuesday">
+                <abbr title="Tuesday">Tu</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Wednesday">
+                <abbr title="Wednesday">We</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Thursday">
+                <abbr title="Thursday">Th</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Friday">
+                <abbr title="Friday">Fr</abbr>
+              </th>
+              <th className="header" role="columnheader" aria-label="Saturday">
+                <abbr title="Saturday">Sa</abbr>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {format(state, "MM/dd/yyyy")}
+          </thead>
+          <tbody>
+            {generateMonth().map((week, i) => (
+              <tr className="week" key={`week-${i}`} role="row">
+                {week.map((day, j) => {
+                  const date = getDate(day);
+                  return (
+                    day && (
+                      <td
+                        tabIndex={0}
+                        style={(i === 0 && date > 22) || (i > 3 && date < 8) ? { color: "red" } : null}
+                        className={`cell ${isEqual(state, day) ? "active" : ""
+                          }`}
+                        key={`day-cell-${j}`}
+                        onClick={() => dispatch({ type: "SET_DATE", payload: day })}
+                        role="gridcell"
+                        aria-selected={isEqual(state, day)}
+                        ref={isEqual(state, day) ? selectedDayRef : null}
+                      >
+                        {date}
+                      </td>
+                    )
+                  );
+                }
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      selected date: {format(state, "MM/dd/yyyy")}
     </div>
   );
 };
