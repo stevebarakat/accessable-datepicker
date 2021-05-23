@@ -1,5 +1,6 @@
 import {
   format,
+  formatISO,
   startOfMonth,
   subMonths,
   addMonths,
@@ -19,6 +20,8 @@ import {
 
 export default function selectedDateReducer(state, action) {
   switch (action.type) {
+    case 'SET_DATE':
+      return action.payload;
     case 'SET_PREVIOUS_YEAR':
       const previousYear = subYears(state, 1);
       return startOfMonth(previousYear);
