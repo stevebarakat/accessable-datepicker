@@ -23,7 +23,7 @@ import {
   faAngleDoubleRight
 } from "@fortawesome/free-solid-svg-icons";
 
-const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
+const Calendar = ({ date, handleSelectDate, closeCalendar }) => {
   const [state, dispatch] = useReducer(selectedDateReducer, new Date(date));
   const selectedDayRef = useRef(null);
 
@@ -82,7 +82,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
         handleSelectDate(formatISO(state, "yyyy-MM-dd"));
         return;
       case 27: //Esc
-        closeCalendar();
+        // closeCalendar();
         return;
       case 33: //Page Up
         shift ?
