@@ -6,7 +6,7 @@ import {
   formatISO,
   startOfMonth,
   getDaysInMonth,
-  getISODay,
+  getDay,
   endOfMonth,
   setDate,
   getDate,
@@ -42,8 +42,8 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
     const daysInMonth = getDaysInMonth(state);
     const firstOfMonth = startOfMonth(state);
     const lastOfMonth = endOfMonth(state);
-    const startWeekday = getISODay(startOfMonth(state));
-    const endWeekday = getISODay(endOfMonth(state));
+    const startWeekday = getDay(startOfMonth(state));
+    const endWeekday = getDay(endOfMonth(state));
     const daysLeft = 6 - endWeekday;
 
     let previous = [];
@@ -57,6 +57,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
     }
 
     for (let i = 0; i < daysLeft; i++) {
+      console.log(endWeekday)
       next.push(getDate(addDays(firstDayNextMonth, i)));
     }
     // concatenate previous, current, and next month dates 
@@ -65,7 +66,7 @@ const Calendar = ({ date, handleSelectDate, handleSelect, closeCalendar }) => {
       [...previous.map(day => setDate(firstDayLastMonth, day)),
       ...Array.from({ length: daysInMonth },
         (_, i) => setDate(state, i + 1)),
-      ...next.map((day) => setDate(firstDayNextMonth, day))], 7);
+      ...next.map(day => setDate(firstDayNextMonth, day ))], 7);
 
     return gridDays;
   };
