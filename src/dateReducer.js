@@ -11,7 +11,7 @@ import {
   addDays
 } from "date-fns";
 
-export default function selectedDateReducer(state, action) {
+export default function dateReducer(state, action) {
   switch (action.type) {
     case 'SET_DATE':
       return { focusedDate: action.payload, selectedDate: action.payload };

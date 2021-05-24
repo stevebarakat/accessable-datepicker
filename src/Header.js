@@ -15,7 +15,6 @@ const Header = ({ state, dispatch }) => {
   return (
     <div className="title">
       <div className="icons">
-      
         {/* previous year */}
         <div
           tabIndex="0" role="button"
