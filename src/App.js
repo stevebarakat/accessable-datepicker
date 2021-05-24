@@ -13,7 +13,7 @@ const App = () => {
   const dates = useGenerateDates(state.selectedDate);
   const days = useGenerateDays({ length: 2 });
 
-  useEffect(() => focusedDateRef.current.focus());
+  useEffect(() => focusedDateRef.current?.focus());
 
   function handleTableKeyPress(e) {
     // Check if shift key was pressed
