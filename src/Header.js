@@ -42,7 +42,7 @@ const Header = ({state, dispatch}) => {
         </div>
       </div>
       <div className="month" role="heading" aria-level="2">
-        <b>{format(state.selectedDate, "MMMM yyyy")}</b>
+        <b>{format(state.focusedDate, "MMMM yyyy")}</b>
       </div>
       <div className="icons">
         <div

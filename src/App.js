@@ -15,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     selectedDayRef.current.focus();
-  });
+  }, [selectedDayRef]);
 console.log(state)
   function handleTableKeyPress(e) {
     selectedDayRef.current.focus();
