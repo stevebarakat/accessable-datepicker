@@ -9,6 +9,7 @@ import {
   addDays,
 } from "date-fns";
 import { chunk } from "lodash";
+import { v4 as uuidv4 } from 'uuid';
 
 export const useGenerateDays = ({ length }) => {
   let arr = [];
@@ -24,7 +25,7 @@ export const useGenerateDays = ({ length }) => {
       case 6: day = "Saturday"; break;
       default: Error("Please supply a day");
     }
-    arr.push(<th role="columnheader" aria-label={day}>
+    arr.push(<th key={uuidv4()} role="columnheader" aria-label={day}>
       <abbr title={day}>{day.slice(0, length)}</abbr></th>);
   }
   return <tr>{arr}</tr>;
