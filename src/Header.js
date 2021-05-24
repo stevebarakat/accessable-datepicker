@@ -42,7 +42,6 @@ const Header = ({state, dispatch}) => {
         </div>
       </div>
       <div className="month" role="heading" aria-level="2">
-        {/* {console.log(formatISO(state))} */}
         <b>{format(state, "MMMM yyyy")}</b>
       </div>
       <div className="icons">

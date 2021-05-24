@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef, useReducer } from "react";
 import { format, getDate, isEqual } from "date-fns";
-import { useGenerateMonth, useGenerateWeekdays } from './hooks';
-import selectedDateReducer from './selectedDateReducer';
-import Header from './Header';
-import './App.css';
+import { useGenerateDays, useGenerateDates } from "./hooks";
+import selectedDateReducer from "./selectedDateReducer";
+import Header from "./Header";
+import "./App.css";
 
 const App = () => {
-  const [state, dispatch] = useReducer(selectedDateReducer, new Date(format(new Date(), "yyyy-MM-dd")));
+  const [state, dispatch] = useReducer(selectedDateReducer, new Date());
   const selectedDayRef = useRef(null);
-  const month = useGenerateMonth(state);
+  const dates = useGenerateDates(state);
+  const days = useGenerateDays({length:2});
+
   useEffect(() => {
     selectedDayRef.current.focus();
   }, [state]);
@@ -26,14 +28,14 @@ const App = () => {
         // close calendar
         return;
       case 33: //Page Up
-        shift ?
-          dispatch({ type: "SET_DATE_NEXT_YEAR" }) :
-          dispatch({ type: "SET_DATE_NEXT_MONTH" });
+        shift
+          ? dispatch({ type: "SET_DATE_NEXT_YEAR" })
+          : dispatch({ type: "SET_DATE_NEXT_MONTH" });
         return;
       case 34: //Page Down
-        shift ?
-          dispatch({ type: "SET_DATE_PREVIOUS_YEAR" }) :
-          dispatch({ type: "SET_DATE_PREVIOUS_MONTH" });
+        shift
+          ? dispatch({ type: "SET_DATE_PREVIOUS_YEAR" })
+          : dispatch({ type: "SET_DATE_PREVIOUS_MONTH" });
         return;
       case 35: //End
         dispatch({ type: "SET_MONTH_END" });
@@ -56,20 +58,22 @@ const App = () => {
       default:
         return;
     }
-  };
+  }
 
   return (
     <div>
       <div className="calendar">
         <Header state={state} dispatch={dispatch} />
-        <table id="grid" role="grid" tabIndex="0" aria-label="Month"
+        <table
+          id="grid"
+          role="grid"
+          tabIndex="0"
+          aria-label="Month"
           onKeyDown={handleTableKeyPress}
         >
-          <thead>
-            {useGenerateWeekdays()}
-          </thead>
+          <thead>{days}</thead>
           <tbody>
-            {month.map((week, i) => (
+            {dates.map((week, i) => (
               <tr className="week" key={`week-${i}`} role="row">
                 {week.map((day, j) => {
                   const date = getDate(day);
@@ -77,10 +81,20 @@ const App = () => {
                     day && (
                       <td
                         tabIndex={0}
-                        style={(i === 0 && date > 22) || (i > 3 && date < 8) ? { color: "red" } : null}
-                        className={`cell ${isEqual(state, day) ? "active" : ""}`}
+                        style={
+                          (i === 0 && date > 22) || (i > 3 && date < 8)
+                            ? {
+                              color: `hsla(129, 0%, 60%, 1.0)`,
+                              fontWeight: "normal"
+                            }
+                            : null
+                        }
+                        className={`cell ${isEqual(state, day) ? "active" : ""
+                          }`}
                         key={`day-cell-${j}`}
-                        onClick={() => dispatch({ type: "SET_DATE", payload: day })}
+                        onClick={() =>
+                          dispatch({ type: "SET_DATE", payload: day })
+                        }
                         role="gridcell"
                         aria-selected={isEqual(state, day)}
                         ref={isEqual(state, day) ? selectedDayRef : null}
@@ -89,14 +103,15 @@ const App = () => {
                       </td>
                     )
                   );
-                }
-                )}
+                })}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <span style={{height: "30px", }}>selected date: {format(state, "MM/dd/yyyy")}</span>
+      <span className="date-display">
+        Selected Date: {format(state, "MM/dd/yyyy")}
+      </span>
     </div>
   );
 };

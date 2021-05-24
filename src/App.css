@@ -1,17 +1,21 @@
 :root {
-  --width: 800px;
+  --width: 250px;
+  --grey: hsla(129, 0%, 74%, 1);
+  --black: hsla(129, 0%, 25%, 1);
+  --black50: hsla(0, 0%, 0%, 0.25);
 }
 * {
   box-sizing: border-box;
 }
 *:focus {
-  outline: 2px solid red;
+  outline: none;
 }
 abbr[title] {
   text-decoration: none;
 }
 body {
   font-family: arial, helvetica, sans-serif;
+  color: var(--black);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,15 +30,19 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  box-shadow: 1px 3px 6px var(--black50);
 }
 
 .title {
+  color: white;
   display: flex;
+  background: var(--black);
+  padding: 1rem 0;
+  justify-content: center;
   flex-direction: row;
   justify-content: space-between;
   font-size: 16px;
-  padding: 0.25rem 0;
-  border: 1px solid black;
+  border: 1px solid var(--black);
   border-bottom: none;
 }
 
@@ -53,20 +61,25 @@ table {
   height: calc(var(--width) - 20px);
   width: 100%;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid var(--grey);
+  border-radius: 0 0 3px 3px;
 }
 
 .cell {
-  border: 1px solid black;
+  box-shadow: 0 0 2px var(--black);
   font-size: 16px;
+  font-weight: bold;
 }
 
 .cell.active,
 .cell:hover {
-  background-color: black;
+  background-color: var(--black);
   color: white;
 }
 
-.empty {
-  background: red !important;
+.date-display {
+  margin-top: 1rem;
+  text-align: center;
+  display: block;
+  font-weight: bold;
 }

@@ -11,35 +11,43 @@ import {
 } from "date-fns";
 import { chunk } from "lodash";
 
-export const useGenerateWeekdays = () => (
+const day0 = "Sunday";
+const day1 = "Monday";
+const day2 = "Tuesday";
+const day3 = "Wednesday";
+const day4 = "Thursday";
+const day5 = "Friday";
+const day6 = "Saturday";
+
+export const useGenerateDays = ({length}) => (
   <>
     <tr role="row">
-      <th role="columnheader" aria-label="Sunday">
-        <abbr title="Sunday">Su</abbr>
+      <th role="columnheader" aria-label={day0}>
+        <abbr title={day0}>{day0.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Monday">
-        <abbr title="Monday">Mo</abbr>
+      <th role="columnheader" aria-label={day1}>
+        <abbr title={day1}>{day1.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Tuesday">
-        <abbr title="Tuesday">Tu</abbr>
+      <th role="columnheader" aria-label={day2}>
+        <abbr title={day2}>{day2.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Wednesday">
-        <abbr title="Wednesday">We</abbr>
+      <th role="columnheader" aria-label={day3}>
+        <abbr title={day3}>{day3.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Thursday">
-        <abbr title="Thursday">Th</abbr>
+      <th role="columnheader" aria-label={day4}>
+        <abbr title={day4}>{day4.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Friday">
-        <abbr title="Friday">Fr</abbr>
+      <th role="columnheader" aria-label={day5}>
+        <abbr title={day5}>{day5.slice(0, length)}</abbr>
       </th>
-      <th role="columnheader" aria-label="Saturday">
-        <abbr title="Saturday">Sa</abbr>
+      <th role="columnheader" aria-label={day6}>
+        <abbr title={day6}>{day6.slice(0, length)}</abbr>
       </th>
     </tr>
   </>
 );
 
-export const useGenerateMonth = (state) => {
+export const useGenerateDates = (state) => {
   const daysInMonth = getDaysInMonth(state);
   const firstOfMonth = startOfMonth(state);
   const lastOfMonth = endOfMonth(state);
@@ -57,7 +65,6 @@ export const useGenerateMonth = (state) => {
   }
 
   for (let i = 0; i < daysLeft; i++) {
-    console.log(state);
     next.push(getDate(addDays(firstDayNextMonth, i)));
   }
   // concatenate previous, current, and next month dates 
