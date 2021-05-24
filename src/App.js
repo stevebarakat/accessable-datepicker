@@ -6,19 +6,16 @@ import Header from "./Header";
 import "./App.css";
 
 const initialDate = new Date();
-const initialState = { selectedDate: initialDate , focusedDate: initialDate };
+const initialState = { selectedDate: initialDate, focusedDate: initialDate };
 const App = () => {
   const [state, dispatch] = useReducer(selectedDateReducer, initialState);
-  const selectedDayRef = useRef(null);
+  const focusedDateRef = useRef(null);
   const dates = useGenerateDates(state.selectedDate);
   const days = useGenerateDays({ length: 2 });
 
-  useEffect(() => {
-    selectedDayRef.current.focus();
-  }, [selectedDayRef]);
-console.log(state)
+  useEffect(() => focusedDateRef.current.focus());
+
   function handleTableKeyPress(e) {
-    selectedDayRef.current.focus();
     // Check if shift key was pressed
     const shift = e.shiftKey;
     switch (e.keyCode) {
@@ -84,25 +81,19 @@ console.log(state)
                       <td
                         tabIndex={0}
                         style={
-                          (i === 0 && date > 22) || (i > 3 && date < 8)
-                            ? {
+                          (i === 0 && date > 22) || (i > 3 && date < 8) ?
+                            {
                               color: `hsla(129, 0%, 60%, 1.0)`,
                               fontWeight: "normal"
-                            }
-                            : null
+                            } : null
                         }
-                        className={`cell ${isEqual(state.focusedDate, day) ? "active" : ""
-                          }`}
+                        className={`cell ${isEqual(state.focusedDate, day) ? "active" : ""}`}
                         key={`day-cell-${j}`}
-                        onClick={() =>
-                          dispatch({ type: "SET_DATE", payload: day })
-                        }
+                        onClick={() => dispatch({ type: "SET_DATE", payload: day })}
                         role="gridcell"
                         aria-selected={isEqual(state.focusedDate, day)}
-                        ref={isEqual(state.focusedDate, day) ? selectedDayRef : null}
-                      >
-                        {date}
-                      </td>
+                        ref={isEqual(state.focusedDate, day) ? focusedDateRef : null}
+                      >{date}</td>
                     )
                   );
                 })}
