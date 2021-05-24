@@ -5,16 +5,18 @@ import selectedDateReducer from "./selectedDateReducer";
 import Header from "./Header";
 import "./App.css";
 
+const initialDate = new Date();
+const initialState = { selectedDate: initialDate , focusedDate: initialDate };
 const App = () => {
-  const [state, dispatch] = useReducer(selectedDateReducer, new Date());
+  const [state, dispatch] = useReducer(selectedDateReducer, initialState);
   const selectedDayRef = useRef(null);
-  const dates = useGenerateDates(state);
-  const days = useGenerateDays({length:2});
+  const dates = useGenerateDates(state.selectedDate);
+  const days = useGenerateDays({ length: 2 });
 
   useEffect(() => {
     selectedDayRef.current.focus();
-  }, [state]);
-
+  });
+console.log(state)
   function handleTableKeyPress(e) {
     selectedDayRef.current.focus();
     // Check if shift key was pressed
@@ -22,7 +24,7 @@ const App = () => {
     switch (e.keyCode) {
       case 13: //Enter
       case 32: //Space
-        dispatch({ type: "SET_DATE", payload: state });
+        dispatch({ type: "SET_DATE", payload: state.focusedDate });
         return;
       case 27: //Esc
         // close calendar
@@ -89,15 +91,15 @@ const App = () => {
                             }
                             : null
                         }
-                        className={`cell ${isEqual(state, day) ? "active" : ""
+                        className={`cell ${isEqual(state.focusedDate, day) ? "active" : ""
                           }`}
                         key={`day-cell-${j}`}
                         onClick={() =>
                           dispatch({ type: "SET_DATE", payload: day })
                         }
                         role="gridcell"
-                        aria-selected={isEqual(state, day)}
-                        ref={isEqual(state, day) ? selectedDayRef : null}
+                        aria-selected={isEqual(state.focusedDate, day)}
+                        ref={isEqual(state.focusedDate, day) ? selectedDayRef : null}
                       >
                         {date}
                       </td>
@@ -110,7 +112,7 @@ const App = () => {
         </table>
       </div>
       <span className="date-display">
-        Selected Date: {format(state, "MM/dd/yyyy")}
+        Selected Date: {format(state.selectedDate, "MM/dd/yyyy")}
       </span>
     </div>
   );
