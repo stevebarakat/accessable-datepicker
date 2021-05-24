@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useReducer } from "react";
 import { format, getDate, isEqual } from "date-fns";
-import { useGenerateDays, useGenerateDates, usePrevious } from "./hooks";
+import { useGenerateDays, useGenerateDates } from "./hooks";
 import selectedDateReducer from "./selectedDateReducer";
 import Header from "./Header";
-import "./App.css";
+import "./Calendar.css";
 
 function useHandleTableKeyPress(e, state, dispatch) {
   // Check if shift key was pressed
@@ -51,18 +51,15 @@ function useHandleTableKeyPress(e, state, dispatch) {
 
 const initialDate = new Date();
 const initialState = { selectedDate: initialDate, focusedDate: initialDate };
-const App = () => {
+const Calendar = () => {
   const [state, dispatch] = useReducer(selectedDateReducer, initialState);
-  const prevState = usePrevious(state);
   const [e, setE] = useState(null);
   const focusedDateRef = useRef(null);
   const dates = useGenerateDates(state.selectedDate);
   const days = useGenerateDays({ length: 2 });
   useEffect(() => focusedDateRef.current?.focus());
-  useHandleTableKeyPress(() => e, state, dispatch);
+  useHandleTableKeyPress(e, state, dispatch);
 
-  console.log(state === prevState);
-  
   return (
     <div>
       <div className="calendar">
@@ -112,4 +109,4 @@ const App = () => {
     </div>
   );
 };
-export default App;
+export default Calendar;
