@@ -14,25 +14,25 @@ import { chunk } from "lodash";
 export const useGenerateWeekdays = () => (
   <>
     <tr role="row">
-      <th className="header" role="columnheader" aria-label="Sunday">
+      <th role="columnheader" aria-label="Sunday">
         <abbr title="Sunday">Su</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Monday">
+      <th role="columnheader" aria-label="Monday">
         <abbr title="Monday">Mo</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Tuesday">
+      <th role="columnheader" aria-label="Tuesday">
         <abbr title="Tuesday">Tu</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Wednesday">
+      <th role="columnheader" aria-label="Wednesday">
         <abbr title="Wednesday">We</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Thursday">
+      <th role="columnheader" aria-label="Thursday">
         <abbr title="Thursday">Th</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Friday">
+      <th role="columnheader" aria-label="Friday">
         <abbr title="Friday">Fr</abbr>
       </th>
-      <th className="header" role="columnheader" aria-label="Saturday">
+      <th role="columnheader" aria-label="Saturday">
         <abbr title="Saturday">Sa</abbr>
       </th>
     </tr>

@@ -1,11 +1,5 @@
-.App {
-  font-family: arial, helvetica, sans-serif;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 50px;
-  width: 300px;
+:root {
+  --width: 800px;
 }
 * {
   box-sizing: border-box;
@@ -16,31 +10,22 @@
 abbr[title] {
   text-decoration: none;
 }
-
-.datepicker {
+body {
+  font-family: arial, helvetica, sans-serif;
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  border: 1px solid black;
-  cursor: pointer;
-}
-.datepicker > div {
-  flex-grow: 1;
-  padding: 10px;
-  text-align: center;
-  margin: 0 auto;
-}
-.datepicker > div:nth-child(1) {
-  border-right: 1px solid black;
-  color: #000000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .calendar {
-  width: 300px;
+  text-align: center;
+  width: var(--width);
+  height: auto;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  padding: 2px;
+  position: relative;
 }
 
 .title {
@@ -48,8 +33,9 @@ abbr[title] {
   flex-direction: row;
   justify-content: space-between;
   font-size: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid black;
+  padding: 0.25rem 0;
+  border: 1px solid black;
+  border-bottom: none;
 }
 
 .icons {
@@ -62,19 +48,17 @@ abbr[title] {
   cursor: pointer;
 }
 
-.month {
-  padding: 0 15px;
-}
-
-.header {
-  height: 30px;
+table {
+  table-layout: fixed;
+  height: calc(var(--width) - 20px);
+  width: 100%;
+  justify-content: center;
+  border: 1px solid black;
 }
 
 .cell {
   border: 1px solid black;
-  height: 30px;
   font-size: 16px;
-  aspect-ratio: 1/1;
 }
 
 .cell.active,

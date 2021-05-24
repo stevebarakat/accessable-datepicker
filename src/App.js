@@ -59,7 +59,7 @@ const App = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <div className="calendar">
         <Header state={state} dispatch={dispatch} />
         <table id="grid" role="grid" tabIndex="0" aria-label="Month"
@@ -96,7 +96,7 @@ const App = () => {
           </tbody>
         </table>
       </div>
-      selected date: {format(state, "MM/dd/yyyy")}
+      <span style={{height: "30px", }}>selected date: {format(state, "MM/dd/yyyy")}</span>
     </div>
   );
 };
