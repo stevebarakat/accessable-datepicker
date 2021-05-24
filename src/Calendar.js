@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useReducer } from "react";
 import { format, getDate, isEqual } from "date-fns";
 import { useGenerateDays, useGenerateDates } from "./hooks";
-import selectedDateReducer from "./selectedDateReducer";
+import dateReducer from "./dateReducer";
 import Header from "./Header";
 import "./Calendar.css";
 
 const initialDate = new Date();
 const initialState = { selectedDate: initialDate, focusedDate: initialDate };
 const Calendar = () => {
-  const [state, dispatch] = useReducer(selectedDateReducer, initialState);
+  const [state, dispatch] = useReducer(dateReducer, initialState);
   const focusedDateRef = useRef(null);
   const dates = useGenerateDates(state.focusedDate);
 
