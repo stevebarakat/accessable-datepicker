@@ -5,6 +5,9 @@ import dateReducer from "./dateReducer";
 import Header from "./Header";
 import "./Calendar.css";
 
+const initialDate = new Date();
+const initialState = { selectedDate: initialDate, focusedDate: initialDate };
+
 function useHandleTableKeyPress(e, state, dispatch) {
   // Check if shift key was pressed
   const shift = e?.shiftKey;
@@ -49,17 +52,15 @@ function useHandleTableKeyPress(e, state, dispatch) {
   }
 }
 
-const initialDate = new Date();
-const initialState = { selectedDate: initialDate, focusedDate: initialDate };
 const Calendar = () => {
   const [state, dispatch] = useReducer(dateReducer, initialState);
   const [e, setE] = useState(null);
   const focusedDateRef = useRef(null);
-  const dates = useGenerateDates(state.selectedDate);
+  const dates = useGenerateDates(state.focusedDate);
   const days = useGenerateDays({ length: 2 });
-  useEffect(() => focusedDateRef.current?.focus());
+  useEffect(() => focusedDateRef.current.focus());
   useHandleTableKeyPress(e, state, dispatch);
-
+  
   return (
     <div>
       <div className="calendar">
@@ -72,35 +73,27 @@ const Calendar = () => {
           onKeyDown={e => setE(e)}
         >
           <thead>{days}</thead>
-          <tbody>
-            {dates.map((week, i) => (
-              <tr className="week" key={`week-${i}`} role="row">
-                {week.map((day, j) => {
-                  const date = getDate(day);
-                  return (
-                    day && (
-                      <td
-                        tabIndex={0}
-                        style={
-                          (i === 0 && date > 22) || (i > 3 && date < 8) ?
-                            {
-                              color: `hsla(129, 0%, 60%, 1.0)`,
-                              fontWeight: "normal"
-                            } : null
-                        }
-                        className={`cell ${isEqual(state.focusedDate, day) ? "active" : ""}`}
-                        key={`day-cell-${j}`}
-                        onClick={() => dispatch({ type: "SET_DATE", payload: day })}
-                        role="gridcell"
-                        aria-selected={isEqual(state.focusedDate, day)}
-                        ref={isEqual(state.focusedDate, day) ? focusedDateRef : null}
-                      >{date}</td>
-                    )
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{dates.map((week, i) => (
+            <tr className="week" key={`week-${i}`} role="row">
+              {week.map((day, j) => {
+                const date = getDate(day);
+                return (
+                  day && (
+                    <td
+                      key={`day-cell-${j}`}
+                      tabIndex={0} role="gridcell"
+                      aria-selected={isEqual(state.focusedDate, day)}
+                      style={(i === 0 && date > 22) || (i > 3 && date < 8) ?
+                        { color: `hsla(129, 0%, 60%, 1.0)`, fontWeight: "normal" } : null}
+                      className={`cell ${isEqual(state.focusedDate, day) ? "active" : ""}`}
+                      ref={isEqual(state.focusedDate, day) ? focusedDateRef : null}
+                      onClick={() => dispatch({ type: "SET_DATE", payload: day })}
+                    >{date}</td>
+                  )
+                );
+              })}
+            </tr>
+          ))}</tbody>
         </table>
       </div>
       <span className="date-display">
