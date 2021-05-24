@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Calendar from './Calendar';
 import axe from 'react-axe';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Calendar />
   </React.StrictMode>,
   document.getElementById('root')
 );

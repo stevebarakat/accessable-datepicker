@@ -1,15 +1,4 @@
-import {
-  startOfMonth,
-  subMonths,
-  addMonths,
-  subYears,
-  addYears,
-  endOfMonth,
-  subWeeks,
-  addWeeks,
-  subDays,
-  addDays
-} from "date-fns";
+import { startOfMonth, subMonths, addMonths, subYears, addYears, endOfMonth, subWeeks, addWeeks, subDays, addDays } from "date-fns";
 
 export default function selectedDateReducer(state, action) {
   switch (action.type) {

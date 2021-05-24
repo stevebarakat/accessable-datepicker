@@ -1,13 +1,4 @@
-import {
-  startOfMonth,
-  getDaysInMonth,
-  getDay,
-  endOfMonth,
-  setDate,
-  getDate,
-  subDays,
-  addDays,
-} from "date-fns";
+import { getDay, getDate, setDate, addDays, subDays, endOfMonth, startOfMonth, getDaysInMonth } from "date-fns";
 import { chunk } from "lodash";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,32 +23,31 @@ export const useGenerateDays = ({ length }) => {
 };
 
 export const useGenerateDates = (state) => {
-  const daysInMonth = getDaysInMonth(state);
-  const firstOfMonth = startOfMonth(state);
-  const lastOfMonth = endOfMonth(state);
-  const startWeekday = getDay(startOfMonth(state));
-  const endWeekday = getDay(endOfMonth(state));
-  const daysLeft = 6 - endWeekday;
+  const daysInMonth = getDaysInMonth(state); // number of days in selected month
+  const firstOfMonth = startOfMonth(state); // first date of selected month
+  const lastOfMonth = endOfMonth(state); // last date of selected month
+  const startWeekday = getDay(startOfMonth(state)); // numeric value (0 - 6) for first day of month
+  const endWeekday = getDay(endOfMonth(state)); // numeric value (0 - 6) for last day of month
+  const daysLeft = 6 - endWeekday; // leftover calendar cells
+  const firstDayLastMonth = subDays(firstOfMonth, startWeekday); // subtract (day number value) from first day of month to calclate which date of previous month to start calendar with
+  const firstDayNextMonth = addDays(lastOfMonth, 1); // add one day to last day of current month to get first date of next month
 
+  // create array of previous month's spill over
   let previous = [];
-  let next = [];
-
-  const firstDayLastMonth = subDays(firstOfMonth, startWeekday);
-  const firstDayNextMonth = addDays(lastOfMonth, 1);
   for (let i = 0; i < startWeekday; i++) {
     previous.push(getDate(addDays(firstDayLastMonth, i)));
   }
-
+  // create array of next month's spill over
+  let next = [];
   for (let i = 0; i < daysLeft; i++) {
     next.push(getDate(addDays(firstDayNextMonth, i)));
   }
-  // concatenate previous, current, and next month dates 
-  // dividing by 7, split into week arrays w/lodash's chunk
-  const gridDays = chunk(
+  // combine previous, current, and next month dates 
+  const gridDays = chunk( // split into week arrays w/lodash's chunk 
     [...previous.map(day => setDate(firstDayLastMonth, day)),
     ...Array.from({ length: daysInMonth },
       (_, i) => setDate(state, i + 1)),
-    ...next.map(day => setDate(firstDayNextMonth, day))], 7);
+    ...next.map(day => setDate(firstDayNextMonth, day))], 7); // divide by 7
 
   return gridDays;
 };

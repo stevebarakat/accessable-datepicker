@@ -4,15 +4,11 @@
   --black: hsla(129, 0%, 25%, 1);
   --black50: hsla(0, 0%, 0%, 0.25);
 }
+
 * {
   box-sizing: border-box;
 }
-*:focus {
-  /* outline: none; */
-}
-abbr[title] {
-  text-decoration: none;
-}
+
 body {
   font-family: arial, helvetica, sans-serif;
   color: var(--black);
@@ -21,6 +17,19 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+table {
+  table-layout: fixed;
+  height: calc(var(--width) - 20px);
+  width: 100%;
+  justify-content: center;
+  border: 1px solid var(--grey);
+  border-radius: 0 0 3px 3px;
+}
+
+abbr[title] {
+  text-decoration: none;
 }
 
 .calendar {
@@ -54,15 +63,6 @@ body {
 .iconContainer {
   padding: 0 10px;
   cursor: pointer;
-}
-
-table {
-  table-layout: fixed;
-  height: calc(var(--width) - 20px);
-  width: 100%;
-  justify-content: center;
-  border: 1px solid var(--grey);
-  border-radius: 0 0 3px 3px;
 }
 
 .cell {
