@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from 'react';
 import {
   startOfMonth,
   getDaysInMonth,
@@ -11,41 +10,25 @@ import {
 } from "date-fns";
 import { chunk } from "lodash";
 
-const day0 = "Sunday";
-const day1 = "Monday";
-const day2 = "Tuesday";
-const day3 = "Wednesday";
-const day4 = "Thursday";
-const day5 = "Friday";
-const day6 = "Saturday";
-
-export const useGenerateDays = ({length}) => (
-  <>
-    <tr role="row">
-      <th role="columnheader" aria-label={day0}>
-        <abbr title={day0}>{day0.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day1}>
-        <abbr title={day1}>{day1.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day2}>
-        <abbr title={day2}>{day2.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day3}>
-        <abbr title={day3}>{day3.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day4}>
-        <abbr title={day4}>{day4.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day5}>
-        <abbr title={day5}>{day5.slice(0, length)}</abbr>
-      </th>
-      <th role="columnheader" aria-label={day6}>
-        <abbr title={day6}>{day6.slice(0, length)}</abbr>
-      </th>
-    </tr>
-  </>
-);
+export const useGenerateDays = ({ length }) => {
+  let arr = [];
+  let day = null;
+  for (let i = 0; i <= 6; i++) {
+    switch (i) {
+      case 0: day = "Sunday"; break;
+      case 1: day = "Monday"; break;
+      case 2: day = "Tuesday"; break;
+      case 3: day = "Wednesday"; break;
+      case 4: day = "Thursday"; break;
+      case 5: day = "Friday"; break;
+      case 6: day = "Saturday"; break;
+      default: Error("Please supply a day");
+    }
+    arr.push(<th role="columnheader" aria-label={day}>
+      <abbr title={day}>{day.slice(0, length)}</abbr></th>);
+  }
+  return <tr>{arr}</tr>;
+};
 
 export const useGenerateDates = (state) => {
   const daysInMonth = getDaysInMonth(state);
