@@ -13,8 +13,8 @@ const Calendar = () => {
   const [state, dispatch] = useReducer(dateReducer, initialState);
   const focusedDateRef = useRef(null);
   const dates = useGenerateDates(state.focusedDate);
-
   const days = useGenerateDays({ length: 2 });
+  
   useEffect(() => focusedDateRef.current.focus());
 
   return (
