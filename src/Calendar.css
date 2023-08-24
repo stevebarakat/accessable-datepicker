@@ -1,12 +1,14 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
-  --width: 250px;
+  --height: 250px;
   --grey: hsla(129, 0%, 74%, 1);
   --black: hsla(129, 0%, 25%, 1);
   --black50: hsla(0, 0%, 0%, 0.25);
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body {
@@ -16,16 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-}
-
-table {
-  table-layout: fixed;
-  height: calc(var(--width) - 20px);
-  width: 100%;
-  justify-content: center;
-  border: 1px solid var(--grey);
-  border-radius: 0 0 3px 3px;
+  min-height: 100vh;
 }
 
 abbr[title] {
@@ -33,13 +26,22 @@ abbr[title] {
 }
 
 .calendar {
+  height: var(--height);
   text-align: center;
-  width: var(--width);
-  height: auto;
   display: flex;
   flex-direction: column;
   position: relative;
   box-shadow: 1px 3px 6px var(--black50);
+  border: 2px solid var(--grey);
+  border-radius: 3px;
+  overflow-x: auto;
+  aspect-ratio: 1/1;
+}
+
+table {
+  table-layout: fixed;
+  max-height: 100%;
+  aspect-ratio: 1/1;
 }
 
 .title {
@@ -66,13 +68,14 @@ abbr[title] {
 }
 
 .cell {
-  box-shadow: 0 0 2px var(--black);
+  /* box-shadow: 0 0 2px var(--black); */
+  border: 1px solid #aaa;
   font-size: 16px;
   font-weight: bold;
+  aspect-ratio: 1/1;
 }
 
-.cell.active,
-.cell:hover {
+.cell.active {
   background-color: var(--black);
   color: white;
 }

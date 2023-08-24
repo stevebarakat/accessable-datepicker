@@ -20,6 +20,7 @@ const Header = ({ state, dispatch }) => {
         >
           &#10094;&#10094;
         </div>
+
         {/* previous month */}
         <div
           tabIndex="0"
@@ -40,7 +41,7 @@ const Header = ({ state, dispatch }) => {
         <b>{format(state.focusedDate, "MMMM yyyy")}</b>
       </div>
 
-      {/* next year */}
+      {/* next month */}
       <div className="icons">
         <div
           tabIndex="0"
@@ -54,7 +55,8 @@ const Header = ({ state, dispatch }) => {
         >
           &#10095;
         </div>
-        {/* next month */}
+
+        {/* next year */}
         <div
           tabIndex="0"
           role="button"
