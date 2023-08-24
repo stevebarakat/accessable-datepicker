@@ -1,15 +1,7 @@
-import React from 'react';
+import React from "react";
 import { format } from "date-fns";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faAngleDoubleLeft,
-  faAngleDoubleRight
-} from "@fortawesome/free-solid-svg-icons";
 
 const Header = ({ state, dispatch }) => {
-
   const handleKeyPress = (e, cb) => (e.key === 13 || e.key === 32) && cb();
 
   return (
@@ -17,20 +9,30 @@ const Header = ({ state, dispatch }) => {
       <div className="icons">
         {/* previous year */}
         <div
-          tabIndex="0" role="button"
+          tabIndex="0"
+          role="button"
           aria-label="Previous year"
           className="iconContainer"
           onClick={() => dispatch({ type: "SET_PREVIOUS_YEAR" })}
-          onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))}
-        ><FontAwesomeIcon icon={faAngleDoubleLeft} /></div>
+          onKeyPress={(e) =>
+            handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_YEAR" }))
+          }
+        >
+          &#10094;&#10094;
+        </div>
         {/* previous month */}
         <div
-          tabIndex="0" role="button"
+          tabIndex="0"
+          role="button"
           aria-label="Previous month"
           className="iconContainer"
           onClick={() => dispatch({ type: "SET_PREVIOUS_MONTH" })}
-          onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))}
-        ><FontAwesomeIcon icon={faAngleLeft} /></div>
+          onKeyPress={(e) =>
+            handleKeyPress(e, dispatch({ type: "SET_PREVIOUS_MONTH" }))
+          }
+        >
+          &#10094;
+        </div>
       </div>
 
       {/* current month */}
@@ -41,20 +43,30 @@ const Header = ({ state, dispatch }) => {
       {/* next year */}
       <div className="icons">
         <div
-          tabIndex="0" role="button"
+          tabIndex="0"
+          role="button"
           aria-label="Next month"
           className="iconContainer"
           onClick={() => dispatch({ type: "SET_NEXT_MONTH" })}
-          onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))}
-        ><FontAwesomeIcon icon={faAngleRight} /></div>
+          onKeyPress={(e) =>
+            handleKeyPress(e, dispatch({ type: "SET_NEXT_MONTH" }))
+          }
+        >
+          &#10095;
+        </div>
         {/* next month */}
         <div
-          tabIndex="0" role="button"
+          tabIndex="0"
+          role="button"
           aria-label="Next year"
           className="iconContainer"
           onClick={() => dispatch({ type: "SET_NEXT_YEAR" })}
-          onKeyPress={(e) => handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))}
-        ><FontAwesomeIcon icon={faAngleDoubleRight} /></div>
+          onKeyPress={(e) =>
+            handleKeyPress(e, dispatch({ type: "SET_NEXT_YEAR" }))
+          }
+        >
+          &#10095;&#10095;
+        </div>
       </div>
     </div>
   );
