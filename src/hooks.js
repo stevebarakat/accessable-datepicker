@@ -1,23 +1,49 @@
-import { getDay, getDate, setDate, addDays, subDays, endOfMonth, startOfMonth, getDaysInMonth } from "date-fns";
+import {
+  getDay,
+  getDate,
+  setDate,
+  addDays,
+  subDays,
+  endOfMonth,
+  startOfMonth,
+  getDaysInMonth,
+} from "date-fns";
 import { chunk } from "lodash";
-import { v4 as uuidv4 } from 'uuid';
 
 export const useGenerateDays = ({ length }) => {
   let arr = [];
   let day = null;
   for (let i = 0; i <= 6; i++) {
     switch (i) {
-      case 0: day = "Sunday"; break;
-      case 1: day = "Monday"; break;
-      case 2: day = "Tuesday"; break;
-      case 3: day = "Wednesday"; break;
-      case 4: day = "Thursday"; break;
-      case 5: day = "Friday"; break;
-      case 6: day = "Saturday"; break;
-      default: Error("Please supply a day");
+      case 0:
+        day = "Sunday";
+        break;
+      case 1:
+        day = "Monday";
+        break;
+      case 2:
+        day = "Tuesday";
+        break;
+      case 3:
+        day = "Wednesday";
+        break;
+      case 4:
+        day = "Thursday";
+        break;
+      case 5:
+        day = "Friday";
+        break;
+      case 6:
+        day = "Saturday";
+        break;
+      default:
+        Error("Please supply a day");
     }
-    arr.push(<th key={uuidv4()} role="columnheader" aria-label={day}>
-      <abbr title={day}>{day.slice(0, length)}</abbr></th>);
+    arr.push(
+      <th key={day} role="columnheader" aria-label={day}>
+        <abbr title={day}>{day.slice(0, length)}</abbr>
+      </th>
+    );
   }
   return <tr>{arr}</tr>;
 };
@@ -42,12 +68,16 @@ export const useGenerateDates = (state) => {
   for (let i = 0; i < daysLeft; i++) {
     next.push(getDate(addDays(firstDayNextMonth, i)));
   }
-  // combine previous, current, and next month dates 
-  const gridDays = chunk( // split into week arrays w/lodash's chunk 
-    [...previous.map(day => setDate(firstDayLastMonth, day)),
-    ...Array.from({ length: daysInMonth },
-      (_, i) => setDate(state, i + 1)),
-    ...next.map(day => setDate(firstDayNextMonth, day))], 7); // divide by 7
+  // combine previous, current, and next month dates
+  const gridDays = chunk(
+    // split into week arrays w/lodash's chunk
+    [
+      ...previous.map((day) => setDate(firstDayLastMonth, day)),
+      ...Array.from({ length: daysInMonth }, (_, i) => setDate(state, i + 1)),
+      ...next.map((day) => setDate(firstDayNextMonth, day)),
+    ],
+    7
+  ); // divide by 7
 
   return gridDays;
 };
